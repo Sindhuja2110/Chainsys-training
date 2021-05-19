@@ -1,0 +1,155 @@
+--Write a PL/SQL program to arrange the number of two variable in such a way that the small number will store in num_small 
+--variable and large number will store in num_large variable.
+
+DECLARE 
+  NUM_1 NUMBER(10) :='50';
+  NUM_2 NUMBER(10) :='100';
+BEGIN 
+ IF NUM_1<NUM_2
+ THEN
+    DBMS_OUTPUT.PUT_LINE('NUM_SMALL'||'='||NUM_1);
+ ELSE
+    DBMS_OUTPUT.PUT_LINE('NUM_LARGE'||'='||NUM_2);
+ END IF;
+ END;
+ 
+--.Write a PL/SQL program to check whether a given character is letter or digit.
+
+DECLARE
+   CHAR_C VARCHAR2(50) := 'S';
+   
+BEGIN
+   IF (CHAR_C >='A' AND CHAR_C <='Z') THEN 
+   DBMS_OUTPUT.PUT_LINE( 'character' );
+   ELSIF (CHAR_C >='0' AND CHAR_C <='9') THEN
+   DBMS_OUTPUT.PUT_LINE( 'DIGIT' );
+   ELSE
+   DBMS_OUTPUT.PUT_LINE( 'NEIGHTER CHARACTER NOR DIGIT' );
+   END IF;
+END;
+
+
+
+--3.Write a program in PL/SQL to print the value of a variable inside and 
+--outside a loop using LOOP WHEN EXIT statement.
+DECLARE 
+   NUM1 NUMBER := '0';
+BEGIN
+   LOOP
+      NUM1 := NUM1 + 1;
+      EXIT WHEN NUM1 > '5';
+          dbms_output.put_line( 'Inside loop: ' || NUM1 );
+   END LOOP;
+      dbms_output.put_line( 'After loop: ' || NUM1 );
+END;
+
+
+--4.Write a PL/SQL program to display which day is a specific date
+DECLARE 
+    D_DATE DATE := TO_DATE('15-MAY-2017','dd-mon-yyyy');
+    D_DAY VARCHAR2(50);
+    BEGIN
+    D_DAY := TO_CHAR(D_DATE,'DAY');
+CASE D_DAY
+    WHEN '1' THEN 
+        DBMS_OUTPUT.PUT_LINE('SUNDAY' );
+    WHEN '2' THEN 
+        DBMS_OUTPUT.PUT_LINE('MONDAY' );
+    WHEN '3' THEN 
+       DBMS_OUTPUT.PUT_LINE('TUESDAY' );
+    WHEN '4' THEN 
+       DBMS_OUTPUT.PUT_LINE('WEDNESDAY' );
+    WHEN '5' THEN 
+       DBMS_OUTPUT.PUT_LINE('THURSDAY' );
+    WHEN '6' THEN 
+       DBMS_OUTPUT.PUT_LINE('FRIDAY' );
+    WHEN '7' THEN 
+       DBMS_OUTPUT.PUT_LINE('SATURDAY' );
+    END CASE;
+END;
+
+
+
+  
+--5.Write a PL/SQL procedure to calculate the incentive on a specific target otherwise a general incentive to be paid 
+--using IF-THEN-ELSE.
+
+DECLARE
+  PROCEDURE test1 (
+    sal_achieve  NUMBER,
+    target_qty  NUMBER,
+    emp_id NUMBER
+  )
+  IS
+    incentive   NUMBER := 0;
+
+  BEGIN
+    IF sal_achieve > (target_qty + 200) THEN
+      incentive := (sal_achieve - target_qty)/4;
+ELSE
+ incentive :=75;
+END IF;
+DBMS_OUTPUT.PUT_LINE ('incentive = ' || incentive);
+      UPDATE EMPLOYEES_21
+      SET salary = salary + incentive 
+      WHERE employee_id = emp_id;
+   
+  END test1;
+BEGIN
+  test1(2300, 2000, 100);
+  test1(3600, 3000, 101);
+END;
+
+--6.Write a PL/SQL block to calculate the incentive of an employee whose ID is 110.
+DECLARE
+  incentive   NUMBER(20);
+BEGIN
+  SELECT salary * 0.5 INTO incentive
+  FROM EMPLOYEES_21   
+  WHERE EMPLOYEE_id = 101;
+DBMS_OUTPUT.PUT_LINE('Incentive  = ' || incentive);
+END;
+
+--7. Write a block to display name, contact no and no of rows from employee table.
+DECLARE 
+      CURSOR E IS
+      SELECT FIRST_NAME, PHONE_NUMBER
+      FROM employees_21;
+      NAME_1 employees_21.FIRST_NAME%TYPE;
+      CONTACT_NUM employees_21.PHONE_NUMBER%TYPE;
+      NO_OF_ROWS  NUMBER(10) :=0;
+BEGIN
+    OPEN E;
+    LOOP
+    FETCH E
+    INTO NAME_1, CONTACT_NUM;
+    EXIT WHEN E%NOTFOUND;
+    NO_OF_ROWS := NO_OF_ROWS+1;
+    DBMS_OUTPUT.PUT_LINE(NAME_1 || ' : ' || CONTACT_NUM );
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE(NO_OF_ROWS);
+    CLOSE E;
+END;
+
+
+--8.To develop a procedure named adjust_salary() sample database.
+-- We’ll update the salary information of employees in the employees table by 
+--using SQL UPDATE statement.
+CREATE OR REPLACE PROCEDURE adjust_salary(
+    in_employee_id employees_21.Employee_ID%TYPE  
+)
+IS
+r_salary employees_21%ROWTYPE;
+BEGIN
+    UPDATE employees_21
+    SET SALARY = 20000
+    WHERE EMPLOYEE_ID = '&ID';
+    IF SQL%FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('RECORD UPDATED');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('RECORD NOT FOUND');
+    END IF;
+END;
+  
+  
+
